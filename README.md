@@ -58,7 +58,7 @@ To get a local copy up and running, follow these simple steps.
 ### **Installation & Setup**
 
 1. **Clone the repository:**  
-   git clone \[https://github.com/your-username/matty-design-tool.git\](https://github.com/your-username/matty-design-tool.git)  
+   git clone \[https://github.com/GrowlingBear01/matty-design-tool.git\](https://github.com/GrowlingBear01/matty-design-tool.git)  
    cd matty-design-tool
 
 2. **Set up Backend Environment Variables:**  
