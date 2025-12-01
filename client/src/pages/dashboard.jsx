@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { IoApps, IoAdd } from "react-icons/io5";
+import { BsBoxArrowRight } from "react-icons/bs";
 
 const API_URL = 'http://localhost:4000/api';
 
-// This component represents a single design card in the gallery
 const DesignCard = ({ design, onSelectDesign }) => (
-  <div 
-    className="border rounded-lg overflow-hidden shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-    onClick={() => onSelectDesign(design._id)}
-  >
-    <img src={design.thumbnailUrl} alt={design.title} className="w-full h-48 object-cover" />
-    <div className="p-4">
-      <h3 className="font-bold text-lg truncate">{design.title}</h3>
-      <p className="text-sm text-gray-500">
-        Created on: {new Date(design.createdAt).toLocaleDateString()}
+  <div className="design-card" onClick={() => onSelectDesign(design._id)}>
+    <img 
+      src={design.thumbnailUrl || "https://placehold.co/400x300/e2e8f0/64748b?text=No+Preview"} 
+      alt={design.title} 
+      className="card-thumb" 
+    />
+    <div className="card-body">
+      <h3 className="card-title">{design.title}</h3>
+      <p className="card-date">
+        Edited: {new Date(design.createdAt).toLocaleDateString()}
       </p>
     </div>
   </div>
@@ -24,7 +26,6 @@ const Dashboard = ({ user, onSelectDesign, onBackToEditor, onLogout }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Fetch the user's designs when the component loads
   useEffect(() => {
     const fetchDesigns = async () => {
       try {
@@ -41,7 +42,7 @@ const Dashboard = ({ user, onSelectDesign, onBackToEditor, onLogout }) => {
 
         setDesigns(res.data);
       } catch (err) {
-        setError('Failed to load designs. Please try again.');
+        setError('Failed to load designs. Is the server running?');
         console.error(err);
       } finally {
         setLoading(false);
@@ -52,30 +53,46 @@ const Dashboard = ({ user, onSelectDesign, onBackToEditor, onLogout }) => {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow-md h-16 flex items-center justify-between px-6">
-        <h1 className="text-xl font-bold">My Designs</h1>
-        <div className="flex items-center space-x-4">
-           <span className="text-sm">Welcome, {user.user.username}!</span>
-           <button onClick={onBackToEditor} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-              Back to Editor
-           </button>
-           <button onClick={onLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-              Logout
+    <div className="dashboard-container">
+      {/* Header */}
+      <header className="dashboard-header">
+        <div className="header-left">
+          <div className="app-logo"><IoApps size={20} /></div>
+          <h1 style={{ fontWeight: 700, fontSize: '18px' }}>Matty Dashboard</h1>
+        </div>
+        <div className="header-right">
+           <span style={{ fontSize: '14px', color: '#64748b' }}>Welcome, {user.user.username}</span>
+           <div className="divider"></div>
+           <button onClick={onLogout} className="icon-btn btn-danger" title="Logout">
+             <BsBoxArrowRight size={20} />
            </button>
         </div>
       </header>
 
-      <main className="p-8">
-        {loading && <p>Loading your designs...</p>}
-        {error && <p className="text-red-500">{error}</p>}
+      {/* Main Content */}
+      <main className="dashboard-main">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <h2 className="dashboard-title" style={{ marginBottom: 0 }}>My Designs</h2>
+          <button onClick={onBackToEditor} className="btn-primary">
+            <IoAdd size={18} /> Create New Design
+          </button>
+        </div>
+
+        {loading && <p style={{ color: '#64748b' }}>Loading your masterpieces...</p>}
+        {error && <p style={{ color: '#ef4444' }}>{error}</p>}
         
         {!loading && !error && designs.length === 0 && (
-          <p>You haven't saved any designs yet. Go to the editor to create your first one!</p>
+          <div className="empty-state">
+            <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>No designs yet</h3>
+            <p>Create your first design to see it appear here!</p>
+            <button onClick={onBackToEditor} className="btn-primary" style={{ marginTop: '20px', display: 'inline-flex' }}>
+              Start Designing
+            </button>
+          </div>
         )}
 
         {!loading && !error && designs.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="design-grid">
             {designs.map(design => (
               <DesignCard key={design._id} design={design} onSelectDesign={onSelectDesign} />
             ))}

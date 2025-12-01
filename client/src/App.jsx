@@ -1,32 +1,44 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Editor from './editor/Editor.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
-import Dashboard from './pages/dashboard.jsx'; // Import the new dashboard
+import Dashboard from './pages/dashboard.jsx';
 import './index.css';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [page, setPage] = useState('login'); // Can be 'login', 'register', 'editor', or 'dashboard'
-  const [selectedDesignId, setSelectedDesignId] = useState(null); // To load a specific design into the editor
+  const [page, setPage] = useState('login'); 
+  const [selectedDesignId, setSelectedDesignId] = useState(null); 
 
-  // On initial load, check for a user session in localStorage
+  // --- 1. INITIAL LOAD ---
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-      setPage('editor'); // Start in the editor if already logged in
+      setPage('dashboard'); // Default to dashboard on load
     }
   }, []);
 
-  // Handle successful login
+  // --- 2. AUTH INTERCEPTOR ---
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) handleLogout();
+        return Promise.reject(error);
+      }
+    );
+    return () => axios.interceptors.response.eject(interceptor);
+  }, []);
+
+  // --- 3. NAVIGATION FUNCTIONS ---
   const handleLogin = (userData) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
-    setPage('editor');
+    setPage('dashboard');
   };
 
-  // Handle logout
   const handleLogout = () => {
     localStorage.removeItem('user');
     setUser(null);
@@ -34,53 +46,53 @@ function App() {
     setPage('login');
   };
 
-  // Called when a user clicks a design in the dashboard
-  const handleSelectDesign = (designId) => {
-    setSelectedDesignId(designId);
-    setPage('editor'); // Switch to the editor to load it
-  };
-  
-  // Called from the dashboard to go back to a blank editor
+  // This is the specific function "Create New Design" needs!
   const handleBackToEditor = () => {
-    setSelectedDesignId(null); // Clear any selected design ID
-    setPage('editor');
-  }
+    console.log("Creating new design..."); 
+    setSelectedDesignId(null); // Null ID = Blank Canvas
+    setPage('editor');         // Switch view
+  };
 
-  // This function acts as a simple router
+  const handleSelectDesign = (designId) => {
+    console.log("Loading design:", designId);
+    setSelectedDesignId(designId); // Set ID = Load existing
+    setPage('editor');
+  };
+
+  // --- 4. RENDER PAGE ---
   const renderPage = () => {
-    // If the user is not logged in, show login or register pages
     if (!user) {
-      if (page === 'register') {
-        return <Register setPage={setPage} />;
-      }
-      return <Login setPage={setPage} onLogin={handleLogin} />;
+      return page === 'register' ? 
+        <Register setPage={setPage} /> : 
+        <Login setPage={setPage} onLogin={handleLogin} />;
     }
 
-    // If the user is logged in
     switch (page) {
       case 'dashboard':
         return <Dashboard 
                   user={user} 
                   onSelectDesign={handleSelectDesign} 
-                  onBackToEditor={handleBackToEditor} 
+                  onBackToEditor={handleBackToEditor} // <--- MUST BE HERE
                   onLogout={handleLogout} 
                 />;
       case 'editor':
-      default:
         return <Editor 
                   user={user} 
                   onLogout={handleLogout} 
                   setPage={setPage} 
                   designId={selectedDesignId} 
                 />;
+      default:
+        return <Dashboard 
+                  user={user} 
+                  onSelectDesign={handleSelectDesign} 
+                  onBackToEditor={handleBackToEditor} 
+                  onLogout={handleLogout} 
+                />;
     }
   };
 
-  return (
-    <div className="app-container">
-      {renderPage()}
-    </div>
-  );
+  return <div className="app-container">{renderPage()}</div>;
 }
 
 export default App;
