@@ -3,7 +3,7 @@ import axios from 'axios';
 import { IoApps, IoAdd } from "react-icons/io5";
 import { BsBoxArrowRight } from "react-icons/bs";
 
-const API_URL = 'http://localhost:4000/api';
+import { API_URL } from '../config';
 
 const DesignCard = ({ design, onSelectDesign }) => (
   <div className="design-card" onClick={() => onSelectDesign(design._id)}>
@@ -102,5 +102,6 @@ const Dashboard = ({ user, onSelectDesign, onBackToEditor, onLogout }) => {
     </div>
   );
 };
+
 
 export default Dashboard;
