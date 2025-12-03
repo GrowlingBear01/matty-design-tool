@@ -32,6 +32,12 @@ Matty was developed as a comprehensive solution for individuals and teams who ne
 * ✅ **Multiple Export Options:** Download final designs as high-quality **PNG** images or print-ready **PDF** documents.  
 * ✅ **Modern UI/UX:** A professional, multi-panel layout with a smooth toast notification system for user feedback.
 
+  <div align="center">
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_Site-2ea44f?style=for-the-badge&logo=vercel)](https://matty-design-tool-eight.vercel.app/)
+
+</div>
+
 ## **Tech Stack**
 
 This project is built using the MERN stack and is fully containerized with Docker.
