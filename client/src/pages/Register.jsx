@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 // Define the base URL for your authentication API
-const API_URL = 'http://localhost:4000/api/auth';
+import { API_URL } from '../config';
 
 const Register = ({ setPage }) => {
   const [username, setUsername] = useState('');
@@ -60,5 +60,6 @@ const Register = ({ setPage }) => {
     </div>
   );
 };
+
 
 export default Register;
