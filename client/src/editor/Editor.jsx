@@ -10,7 +10,7 @@ import { BsBoxArrowRight, BsSquare, BsCircle } from "react-icons/bs";
 import { FaUndo, FaRedo, FaFilePdf, FaImage } from "react-icons/fa";
 import { templates } from './templates';
 
-const API_URL = 'http://localhost:4000/api';
+import { API_URL } from '../config';
 
 // --- Helper Components ---
 const ToolButton = ({ icon, label, onClick }) => (
