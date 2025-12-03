@@ -15,7 +15,7 @@ const Login = ({ setPage, onLogin }) => {
     setError('');
     setIsLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/login`, { email, password });
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
       onLogin(res.data); // On success, pass user data up to the App component
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
@@ -69,3 +69,4 @@ const Login = ({ setPage, onLogin }) => {
 
 
 export default Login;
+
