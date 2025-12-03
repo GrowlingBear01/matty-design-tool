@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 // Define the base URL for your authentication API
-const API_URL = 'http://localhost:4000/api/auth';
+import { API_URL } from '../config';
 
 const Login = ({ setPage, onLogin }) => {
   const [email, setEmail] = useState('');
@@ -66,5 +66,6 @@ const Login = ({ setPage, onLogin }) => {
     </div>
   );
 };
+
 
 export default Login;
