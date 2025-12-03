@@ -16,7 +16,7 @@ const Register = ({ setPage }) => {
     setError('');
     setIsLoading(true);
     try {
-      await axios.post(`${API_URL}/register`, { username, email, password });
+      await axios.post(`${API_URL}/auth/register`, { username, email, password });
       alert('Registration successful! Please login.');
       setPage('login'); // Switch to the login page on success
     } catch (err) {
@@ -63,3 +63,4 @@ const Register = ({ setPage }) => {
 
 
 export default Register;
+
