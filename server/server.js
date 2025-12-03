@@ -14,7 +14,27 @@ const Design = require('./models/Design');
 const app = express();
 
 // Global Middleware
-app.use(cors());
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors'); // <--- Ensure this import is here
+// ... other imports
+
+const app = express();
+
+// --- REPLACE app.use(cors()); WITH THIS: ---
+app.use(cors({
+  origin: [
+    "http://localhost:5173", 
+    "https://matty-design-tool-eight.vercel.app/" 
+  ],
+  credentials: true
+}));
+// -------------------------------------------
+
+app.use(express.json({ limit: '10mb' }));
+
+// ... rest of your routes
 app.use(express.json({ limit: '10mb' }));
 
 // --- ROUTES ---
